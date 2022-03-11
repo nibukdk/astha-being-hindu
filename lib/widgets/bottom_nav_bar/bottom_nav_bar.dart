@@ -34,12 +34,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
           label: 'Home',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.temple_hindu_sharp),
-          label: 'Temples',
+          icon: Icon(Icons.favorite),
+          label: 'Favorites',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.event_available),
-          label: 'Events',
+          icon: Icon(Icons.shop),
+          label: 'Shop',
         ),
       ],
       backgroundColor: Theme.of(context).colorScheme.primary,
