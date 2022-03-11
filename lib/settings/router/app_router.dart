@@ -1,4 +1,5 @@
 import 'package:astha/provider/app_state_provider.dart';
+import 'package:astha/screens/auth/screens/auth_screen.dart';
 import 'package:astha/screens/home/home_screen.dart';
 import 'package:astha/screens/onboard/onboard_screen.dart';
 import 'package:go_router/go_router.dart';
@@ -36,11 +37,11 @@ class AppRouter {
           ],
           builder: (context, state) => const Home(),
         ),
-        // GoRoute(
-        //   path: APP_PAGE.auth.routePath,
-        //   name: APP_PAGE.auth.routeName,
-        //   builder: (context, state) => const AuthScreen(),
-        // ),
+        GoRoute(
+          path: APP_PAGE.auth.routePath,
+          name: APP_PAGE.auth.routeName,
+          builder: (context, state) => const AuthScreen(),
+        ),
         // GoRoute(
         //   path: APP_PAGE.events.routePath,
         //   name: APP_PAGE.events.routeName,
