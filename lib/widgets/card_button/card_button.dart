@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CardButton extends StatelessWidget {
   final IconData icon;
   final String title;
   final double width;
+  final String routeName;
 
-  CardButton(this.icon, this.title, this.width, {Key? key}) : super(key: key);
+  const CardButton(this.icon, this.title, this.width, this.routeName,
+      {Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +39,7 @@ class CardButton extends StatelessWidget {
                       size: 35,
                     ),
                     color: Theme.of(context).colorScheme.secondary,
-                    onPressed: () {},
+                    onPressed: () => GoRouter.of(context).goNamed(routeName),
                   ),
                 ),
               ),

@@ -7,7 +7,11 @@ enum APP_PAGE {
   events,
   temples,
   shop,
-  search
+  search,
+  favorite,
+  venues,
+  music,
+  donate
 }
 
 extension AppPageExtension on APP_PAGE {
@@ -19,6 +23,18 @@ extension AppPageExtension on APP_PAGE {
 
       case APP_PAGE.search:
         return "home/search";
+
+      case APP_PAGE.venues:
+        return "home/venues";
+
+      case APP_PAGE.music:
+        return "home/music";
+
+      case APP_PAGE.donate:
+        return "home/donate";
+
+      case APP_PAGE.favorite:
+        return "/favorites";
 
       case APP_PAGE.error:
         return "/error";
@@ -33,10 +49,10 @@ extension AppPageExtension on APP_PAGE {
       //   return "/splash";
 
       case APP_PAGE.events:
-        return "/events";
+        return "home/events";
 
       case APP_PAGE.temples:
-        return "/temples";
+        return "home/temples";
 
       case APP_PAGE.shop:
         return "/shop";
@@ -51,6 +67,16 @@ extension AppPageExtension on APP_PAGE {
     switch (this) {
       case APP_PAGE.home:
         return "HOME";
+
+      case APP_PAGE.favorite:
+        return "FAVORITES";
+
+      case APP_PAGE.venues:
+        return "VENUE";
+      case APP_PAGE.music:
+        return "MUSIC";
+      case APP_PAGE.donate:
+        return "DONATE";
 
       case APP_PAGE.search:
         return "SEARCH";
@@ -88,6 +114,15 @@ extension AppPageExtension on APP_PAGE {
       case APP_PAGE.home:
         return "Astha";
 
+      case APP_PAGE.favorite:
+        return "Favorites";
+      case APP_PAGE.venues:
+        return "Venues";
+      case APP_PAGE.music:
+        return "Music";
+      case APP_PAGE.donate:
+        return "Donate";
+
       case APP_PAGE.search:
         return "Search..";
 
@@ -107,7 +142,7 @@ extension AppPageExtension on APP_PAGE {
         return "Tempels Near You";
 
       case APP_PAGE.shop:
-        return "Shop ";
+        return "Shop";
 
       default:
         return "Astha";

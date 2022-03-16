@@ -16,8 +16,8 @@ class _BottomNavBarState extends State<BottomNavBar> {
 
   static final List<String> _widgetOptions = [
     APP_PAGE.home.routeName,
-    APP_PAGE.temples.routeName,
-    APP_PAGE.events.routeName,
+    APP_PAGE.favorite.routeName,
+    APP_PAGE.shop.routeName,
     // APP_PAGE.search.routeName,
   ];
 

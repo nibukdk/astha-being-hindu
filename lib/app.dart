@@ -1,4 +1,5 @@
-import 'package:astha/settings/permissions/provider/permissions_provider.dart';
+import 'package:astha/provider/permissions/provider/permissions_provider.dart';
+import 'package:astha/screens/temples/provider/temple_provider.dart';
 import 'package:astha/settings/theme/theme.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -6,7 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
 //
-import 'package:astha/provider/app_state_provider.dart';
+import 'package:astha/provider/app_state/app_state_provider.dart';
 import 'package:astha/settings/router/app_router.dart';
 import 'package:astha/screens/auth/provider/auth_state_provider.dart';
 
@@ -41,6 +42,7 @@ class _MyAppState extends State<MyApp> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (context) => AuthStateProvider()),
+        ChangeNotifierProvider(create: (context) => TempleProvider()),
         ChangeNotifierProvider(create: (context) => AppPermissionProvider()),
         ChangeNotifierProxyProvider<AuthStateProvider, AppStateProvider>(
           create: (context) => AppStateProvider(

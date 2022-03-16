@@ -70,6 +70,7 @@ class AuthStateProvider extends ChangeNotifier {
         {
           'username': username,
           'email': email,
+          'userLocation': null,
         },
       );
       _email = email;
