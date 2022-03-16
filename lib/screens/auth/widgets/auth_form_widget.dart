@@ -159,7 +159,9 @@ class _AuthFormWidgetState extends State<AuthFormWidget> {
               toggleObscureText: toggleObscureText,
               validator: authValidator.passwordVlidator,
               prefIcon: const Icon(Icons.password),
-              textInputAction: TextInputAction.done,
+              textInputAction: registerAuthMode
+                  ? TextInputAction.next
+                  : TextInputAction.done,
               isEmailTextField: false,
             ),
 
