@@ -1,5 +1,4 @@
 const functions = require("firebase-functions"),
-    nodeHttp = require('https'),
     admin = require('firebase-admin');
 require('dotenv').config();
 admin.initializeApp();
@@ -8,18 +7,38 @@ const db = admin.firestore();
 // const baseUrlNearBySearch = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?";
 // const api = process.env.API_KEY;
 
-exports.addUserLocation = functions.https.onCall(async (data, context) => {
+exports.addTimeStampToUser = functions.runWith({
+    timeoutSeconds: 120,
+    memory: "256MB"
+}).firestore.document('users/{userId}').onCreate(async (snapshot, context) => {
+    let curTimeStamp = admin.firestore.Timestamp.now();
+    functions.logger.log(`curTimeStamp ${curTimeStamp}`);
+
+    try {
+
+        await db.collection('users').doc(context.params.userId).set({ 'registeredAt': curTimeStamp }, { merge: true });
+        functions.logger.log(`The current timestamp added to users collection:  ${curTimeStamp}`);
+        return { 'status': 200 };
+    } catch (e) {
+        functions.logger.log(`Something went wrong could not add timestamp to users collectoin ${curTimeStamp}`);
+        return { 'status': 400 };
+    }
+});
+
+
+exports.addUserLocation = functions.runWith({
+    timeoutSeconds: 60,
+    memory: "256MB"
+}).https.onCall(async (data, context) => {
 
     try {
 
         let snapshot = await db.collection('users').doc((context.auth.uid)).get();
-        // functions.logger.log(snapshot['_fieldsProto']['userLocation']["valueType"]);
-        // Check if field value for locatio is null
-        console.log(snapshot['_fieldsProto']['userLocation']);
+        // Check if field value for location is null
+        // functions.logger.log(snapshot['_fieldsProto']['userLocation']["valueType"] === "nullValue");
         let locationValutType = snapshot['_fieldsProto']['userLocation']["valueType"];
-
         if (locationValutType == 'nullValue') {
-            db.collection('users').doc((context.auth.uid)).set({ 'userLocation': data.userLocation }, { merge: true });
+            await db.collection('users').doc((context.auth.uid)).set({ 'userLocation': data.userLocation }, { merge: true });
             functions.logger.log(`Ùser location added ${data.userLocation}`);
         }
         else {
@@ -29,7 +48,10 @@ exports.addUserLocation = functions.https.onCall(async (data, context) => {
 
     }
     catch (e) {
-        throw e;
+        functions.logger.log(e);
+        // throw e;
+        // return e;
+        throw new functions.https.HttpsError('internal', e);
     }
     return data.userLocation;
 
@@ -65,7 +87,8 @@ exports.getNearbyTemples = functions.runWith({
         await db.collection('temples').add({ temples: temples });
 
     } catch (e) {
-        throw e;
+        return { 'status': 400 };
+
     }
 
     return templeList;
@@ -82,7 +105,9 @@ exports.addPlacesIdTemples = functions.runWith({
     try {
         functions.logger.log("AddPlacessIdTempleslist onCreate was called");
         await db.collection('temples').doc(context.params.templeId).set({ 'palces_id_list': placesIdList }, { merge: true });
-    } catch (e) { throw e; }
+    } catch (e) {
+        return { 'status': 400 };
+    }
     return { 'status': 200 };
 });
 

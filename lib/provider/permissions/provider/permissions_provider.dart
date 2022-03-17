@@ -33,25 +33,32 @@ class AppPermissionProvider with ChangeNotifier {
     _locationStatus = status;
 
     notifyListeners();
-    print(_locationStatus);
+    // print(_locationStatus);
   }
 
   void getLocation() async {
-    HttpsCallable addUserLocation = functions.httpsCallable('addUserLocation');
-    _locationData = await _location.getLocation();
-    _locationCenter = LatLng(
-        _locationData!.latitude as double, _locationData!.longitude as double);
+    try {
+      HttpsCallable addUserLocation =
+          functions.httpsCallable('addUserLocation');
+      _locationData = await _location.getLocation();
+      _locationCenter = LatLng(_locationData!.latitude as double,
+          _locationData!.longitude as double);
 
-    final response = await addUserLocation.call(
-      <String, dynamic>{
-        'userLocation': _locationCenter != null
-            ? {
-                'lat': _locationCenter!.latitude,
-                'lon': _locationCenter!.longitude
-              }
-            : "Not available",
-      },
-    );
+      await addUserLocation.call(
+        <String, dynamic>{
+          'userLocation': {
+            'lat': _locationCenter != null
+                ? _locationCenter!.latitude
+                : "Not available",
+            'lon': _locationCenter != null
+                ? _locationCenter!.longitude
+                : "Not available",
+          }
+        },
+      );
+    } catch (e) {
+      print(e);
+    }
 
     notifyListeners();
   }
