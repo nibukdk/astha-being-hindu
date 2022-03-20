@@ -57,18 +57,14 @@ exports.addUserLocation = functions.runWith({
 
 });
 
-
-
 exports.getNearbyTemples = functions.runWith({
-    timeoutSeconds: 180,
-    memory: "256MB",
+    timeoutSeconds: 120,
+    memory: "256MB"
 }).https.onCall(async (data, context) => {
     // let eventId = context.eventId;
     // const hasProceeded = isEvent
-    let templeList = [];
     try {
         functions.logger.log("Add nearby temples function was called");
-
         let temples = data.templeList.map((temple) => {
             return {
                 'place_id': temple['place_id'],
@@ -77,22 +73,20 @@ exports.getNearbyTemples = functions.runWith({
                 'latLng': {
                     'lat': temple.hasOwnProperty('geometry') ? temple['geometry']['location']['lat'] : 'Not Available', 'lon': temple.hasOwnProperty('geometry') ? temple['geometry']['location']['lng'] : 'Not Available',
                     'dateAdded': admin.firestore.Timestamp.now()
-                }
+                },
+                'imageRef': data.imageRef
             }
         }
 
         );
-        templeList = [...temples];
+
         // functions.logger.log(temples[1]);
         await db.collection('temples').add({ temples: temples });
 
     } catch (e) {
-        return { 'status': 400 };
-
+        return { 'Error Msg': e };
     }
-
-    return templeList;
-
+    return temples;
 });
 
 exports.addPlacesIdTemples = functions.runWith({
@@ -102,6 +96,7 @@ exports.addPlacesIdTemples = functions.runWith({
     const templeList = snapshot.data()['temples'];
 
     const placesIdList = templeList.map((temple) => temple['place_id']);
+
     try {
         functions.logger.log("AddPlacessIdTempleslist onCreate was called");
         await db.collection('temples').doc(context.params.templeId).set({ 'palces_id_list': placesIdList }, { merge: true });
