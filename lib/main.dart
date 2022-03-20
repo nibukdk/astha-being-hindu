@@ -2,6 +2,7 @@ import 'dart:io' show Platform;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -51,11 +52,12 @@ Future _connectToEmulator() async {
   const authPort = 9099;
   const firestorePort = 8080;
   const functionsPort = 5001;
-  // const storagePort = 9199;
+  const storagePort = 9199;
 
   print("I am running on emulator");
 
   await FirebaseAuth.instance.useAuthEmulator(host, authPort);
   FirebaseFirestore.instance.useFirestoreEmulator(host, firestorePort);
   FirebaseFunctions.instance.useFunctionsEmulator(host, functionsPort);
+  FirebaseStorage.instance.useStorageEmulator(host, storagePort);
 }

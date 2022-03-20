@@ -47,12 +47,12 @@ class _HomeState extends State<Home> {
     // Device width
     final deviceWidth = MediaQuery.of(context).size.width;
     // Subtract paddings to calculate available dimensions
-    final avaliableHeight = deviceHeight -
+    final availableHeight = deviceHeight -
         AppBar().preferredSize.height -
         MediaQuery.of(context).padding.top -
         MediaQuery.of(context).padding.bottom;
 
-    final availableWiddth = deviceWidth -
+    final availableWidth = deviceWidth -
         MediaQuery.of(context).padding.right -
         MediaQuery.of(context).padding.left;
 
@@ -68,7 +68,7 @@ class _HomeState extends State<Home> {
       body: SafeArea(
         child: SingleChildScrollView(
             child: Column(children: [
-          DailyQuotes(avaliableHeight, availableWiddth),
+          DailyQuotes(availableHeight, availableWidth),
           Padding(
             padding: const EdgeInsets.all(4),
             child: GridView.count(
@@ -81,31 +81,31 @@ class _HomeState extends State<Home> {
                 CardButton(
                   Icons.temple_hindu_sharp,
                   "Find Temples Near You",
-                  availableWiddth,
+                  availableWidth,
                   APP_PAGE.temples.routeName,
                 ),
                 CardButton(
                   Icons.event,
                   "Coming Events",
-                  availableWiddth,
+                  availableWidth,
                   APP_PAGE.events.routeName,
                 ),
                 CardButton(
                   Icons.location_pin,
                   "Find Venues",
-                  availableWiddth,
+                  availableWidth,
                   APP_PAGE.venues.routeName,
                 ),
                 CardButton(
                   Icons.music_note,
                   "Morning Prayers",
-                  availableWiddth,
+                  availableWidth,
                   APP_PAGE.music.routeName,
                 ),
                 CardButton(
                   Icons.attach_money_sharp,
                   "Donate",
-                  availableWiddth,
+                  availableWidth,
                   APP_PAGE.donate.routeName,
                 ),
               ],

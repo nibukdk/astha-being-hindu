@@ -4,8 +4,8 @@ class TempleItemWidget extends StatelessWidget {
   final String title;
   final String imageUrl;
   final String address;
-  // final double width;
-  // final double height;
+  final double width;
+  final double height;
 
   // final String establishedDate;
 
@@ -13,8 +13,8 @@ class TempleItemWidget extends StatelessWidget {
       {required this.title,
       required this.imageUrl,
       required this.address,
-      // required this.height,
-      // required this.width,
+      required this.height,
+      required this.width,
 
       // required this.establishedDate,
       Key? key})
@@ -24,7 +24,7 @@ class TempleItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 200,
-      width: 200,
+      width: width * .9,
       child: Card(
         elevation: 6,
         shape: RoundedRectangleBorder(
