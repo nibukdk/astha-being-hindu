@@ -4,21 +4,28 @@ import 'package:astha/settings/router/utils/router_utils.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 class AuthStateProvider extends ChangeNotifier {
   FirebaseAuth authInstance = FirebaseAuth.instance;
+  final FirebaseFunctions functions = FirebaseFunctions.instance;
+  final FirebaseFirestore firestore = FirebaseFirestore.instance;
+
   // AuthState _authState = AuthState.loggedOut;
   ViewState _viewState = ViewState.idle;
 
   UserModel? _user;
   String? _email;
   String? _username;
+  List? _favList = [];
 
   UserModel get user => _user as UserModel;
   // AuthState get authState => _authState;
   ViewState get viewState => _viewState;
+  List get favList => _favList as List;
 
   get email => _email;
   get username => _username;
@@ -146,7 +153,20 @@ class AuthStateProvider extends ChangeNotifier {
     setViewState(ViewState.idle);
   }
 
-  // void saveUser(username, email) {
-  //   _user = UserModel(username: username, email: email);
-  // }
+  void addToFavList(String templeId) async {
+    HttpsCallable addToFav = functions.httpsCallable('addToFavList');
+    try {
+      setViewState(ViewState.busy);
+      final addToFavList = await addToFav.call(<String, String>{
+        'templeId': templeId,
+      });
+
+      _favList = addToFavList.data['favList'] ?? [];
+      setViewState(ViewState.idle);
+    } catch (e) {
+      print(e);
+      setViewState(ViewState.idle);
+    }
+    notifyListeners();
+  }
 }

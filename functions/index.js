@@ -16,7 +16,7 @@ exports.addTimeStampToUser = functions.runWith({
 
     try {
 
-        await db.collection('users').doc(context.params.userId).set({ 'registeredAt': curTimeStamp }, { merge: true });
+        await db.collection('users').doc(context.params.userId).set({ 'registeredAt': curTimeStamp, 'favTempleList': [], 'favShopsList': [], 'favEvents': [] }, { merge: true });
         functions.logger.log(`The current timestamp added to users collection:  ${curTimeStamp}`);
         return { 'status': 200 };
     } catch (e) {
@@ -40,17 +40,16 @@ exports.addUserLocation = functions.runWith({
         if (locationValutType == 'nullValue') {
             await db.collection('users').doc((context.auth.uid)).set({ 'userLocation': data.userLocation }, { merge: true });
             functions.logger.log(`Ùser location added ${data.userLocation}`);
+
         }
         else {
             functions.logger.log(`Ùser location not changed`);
-            return;
+
         }
 
     }
     catch (e) {
         functions.logger.log(e);
-        // throw e;
-        // return e;
         throw new functions.https.HttpsError('internal', e);
     }
     return data.userLocation;
@@ -154,3 +153,52 @@ exports.updateNearbyTemples = functions.runWith({
     return null;
 });
 
+
+
+// Add temple to my fav list:
+exports.addToFavList = functions.runWith({
+    timeoutSeconds: 120,
+    memory: "128MB"
+}).https.onCall(async (data, context) => {
+    const templeId = data.templeId;
+    try {
+        let userDocRef = await db.collection('users').doc(context.auth.uid).get();
+        let favTempleList = userDocRef._fieldsProto.favTempleList;
+        // let favShopsList = userDocRef._fieldsProto.favShopsList;
+        // if fav list is empty 
+        if (favTempleList.arrayValue.values.length === 0) {
+            const templeList = [templeId];
+            functions.logger.log("Fav list is empty");
+
+            await db.collection('users').doc(context.auth.uid).set({ favTempleList: templeList }, { merge: true });
+            // return { favList: newTemplesList };
+        } else {
+            functions.logger.log("Fav list is not empty");
+            // Make list of available ids
+            // firebase providers arrays values as such fileName.arrayValue.values array 
+            // consisting dictionary with stringValue key
+            let tempArrayValList = favTempleList.arrayValue.values.map(item => item.stringValue);
+            // if not empty Check if the temple id already exists
+            let hasId = tempArrayValList.includes(templeId);
+            // if so remove the id if no just add the list 
+            if (hasId === true) {
+
+                // Usr filter to remove value if exists
+                let newTemplesList = tempArrayValList.filter(id => id !== templeId);
+
+                await db.collection('users').doc(context.auth.uid).set({ favTempleList: newTemplesList }, { merge: true });
+                // return { favList: newTemplesList };
+
+            } else {
+                let idList = [...tempArrayValList];
+                idList.push(templeId);
+                await db.collection('users').doc(context.auth.uid).set({ favTempleList: idList }, { merge: true });
+                // return { favList: idList };
+
+            }
+
+        }
+
+    } catch (e) { functions.logger.log(e); }
+    return "Done";
+});
