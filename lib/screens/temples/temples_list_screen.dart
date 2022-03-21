@@ -1,4 +1,5 @@
 import 'package:astha/provider/permissions/provider/permissions_provider.dart';
+import 'package:astha/screens/auth/utils/auth_utils.dart';
 import 'package:astha/screens/temples/provider/temple_provider.dart';
 import 'package:astha/screens/temples/widgets/temple_item_widget.dart';
 import 'package:astha/settings/router/utils/router_utils.dart';
@@ -21,33 +22,26 @@ class _TempleListScreenState extends State<TempleListScreen> {
   late TextEditingController _searchFormController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   late FocusNode _searchFormFocusNode;
-  LatLng? userLocation;
-  Future? _temples;
+  LatLng? _userLocation;
+  // Future? _temples;
 
-  LatLng getLocation() {
-    return userLocation =
-        Provider.of<AppPermissionProvider>(context, listen: false)
-            .locationCenter;
-  }
-
-  Future _nearbyTemples() {
-    final location = getLocation();
-
-    return Provider.of<TempleProvider>(context, listen: false)
-        .getNearyByTemples(location);
-  }
+  // Future _nearbyTemples(location) {
+  //   return Provider.of<TempleProvider>(context, listen: false)
+  //       .getNearyByTemples(location);
+  // }
 
   @override
   void initState() {
     super.initState();
     _searchFormController = TextEditingController();
     _searchFormFocusNode = FocusNode();
-    // appPermissionProvider = AppPermissionProvider();
-    _temples = _nearbyTemples();
   }
 
   @override
   void didChangeDependencies() {
+    _userLocation = Provider.of<AppPermissionProvider>(context, listen: false)
+        .locationCenter;
+    // _temples = _nearbyTemples(_userLocation);
     super.didChangeDependencies();
   }
 
@@ -58,6 +52,11 @@ class _TempleListScreenState extends State<TempleListScreen> {
     _searchFormController.dispose();
     _searchFormFocusNode.dispose();
   }
+
+  // bool isOnTheList(List itemList, String currentItemId) {
+  //   print("isOnTheList was called");
+  //   return itemList.contains(currentItemId);
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -87,13 +86,16 @@ class _TempleListScreenState extends State<TempleListScreen> {
       bottomNavigationBar: BottomNavBar(navItemIndex: 0),
       body: SafeArea(
         child: FutureBuilder(
-          future: _temples,
+          future: Provider.of<TempleProvider>(context, listen: false)
+              .getNearyByTemples(_userLocation as LatLng),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const Center(child: CircularProgressIndicator());
             } else {
               final templeList =
                   Provider.of<TempleProvider>(context, listen: false).temples;
+              final ViewState viewState =
+                  Provider.of<TempleProvider>(context, listen: false).viewState;
               return SizedBox(
                 width: availableWidth * 9,
                 child: Column(
@@ -102,16 +104,17 @@ class _TempleListScreenState extends State<TempleListScreen> {
                         ? const Text("There are no temples around you")
                         : Expanded(
                             child: ListView.builder(
-                              itemBuilder: (context, i) => TempleItemWidget(
-                                address: templeList[i].address,
-                                imageUrl: templeList[i].imageUrl,
-                                title: templeList[i].name,
-                                width: availableWidth,
-                                height: availableHeight,
-                              ),
-                              itemCount: templeList.length,
+                            itemBuilder: (context, i) => TempleItemWidget(
+                              address: templeList[i].address,
+                              imageUrl: templeList[i].imageUrl,
+                              title: templeList[i].name,
+                              width: availableWidth,
+                              height: availableHeight,
+                              viewState: viewState,
+                              itemId: templeList[i].placesId,
                             ),
-                          )
+                            itemCount: templeList.length,
+                          ))
                   ],
                 ),
               );

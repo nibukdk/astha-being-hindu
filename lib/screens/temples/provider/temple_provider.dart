@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:astha/screens/auth/utils/auth_utils.dart';
 import 'package:astha/screens/temples/utils/utils.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_functions/cloud_functions.dart';
@@ -20,7 +21,7 @@ class TempleProvider with ChangeNotifier {
       firbaseStorage.FirebaseStorage.instanceFor(
           bucket: 'being-hindu-308f9.appspot.com');
 
-  // ViewState _viewState = ViewState.idle;
+  ViewState _viewState = ViewState.idle;
 
   final TemplesUtils templesUtils = TemplesUtils();
   // Create the fake list of temples
@@ -34,6 +35,7 @@ class TempleProvider with ChangeNotifier {
   List get resultList => _resultList as List;
   LatLng get userLocation => _userLocation as LatLng;
   String get errMsg => _errMsg as String;
+  ViewState get viewState => _viewState;
 
   static const List<String> imagePaths = [
     'image_1.jpg',
@@ -41,6 +43,11 @@ class TempleProvider with ChangeNotifier {
     'image_3.jpg',
     'image_4.jpg',
   ];
+
+  void setViewState(ViewState viewState) {
+    _viewState = viewState;
+    notifyListeners();
+  }
 
   Future<void> getNearyByTemples(LatLng userLocation) async {
     Uri url = templesUtils.searchUrl(userLocation);
@@ -72,13 +79,15 @@ class TempleProvider with ChangeNotifier {
         final newTempleLists = templesListCall.data['temples']
             .map(
               (temple) => TempleModel(
-                  name: temple['name'],
-                  address: temple['address'],
-                  latLng: LatLng(
-                    temple['latLng']['lat'],
-                    temple['latLng']['lon'],
-                  ),
-                  imageUrl: temple['imageRef']),
+                name: temple['name'],
+                address: temple['address'],
+                latLng: LatLng(
+                  temple['latLng']['lat'],
+                  temple['latLng']['lon'],
+                ),
+                imageUrl: temple['imageRef'],
+                placesId: temple['place_id'],
+              ),
             )
             .toList();
         _temples = [...newTempleLists];
@@ -91,13 +100,15 @@ class TempleProvider with ChangeNotifier {
           final templesList = tempList
               .map(
                 (temple) => TempleModel(
-                    name: temple['name'],
-                    address: temple['address'],
-                    latLng: LatLng(
-                      temple['latLng']['lat'],
-                      temple['latLng']['lon'],
-                    ),
-                    imageUrl: temple['imageRef']),
+                  name: temple['name'],
+                  address: temple['address'],
+                  latLng: LatLng(
+                    temple['latLng']['lat'],
+                    temple['latLng']['lon'],
+                  ),
+                  imageUrl: temple['imageRef'],
+                  placesId: temple['place_id'],
+                ),
               )
               .toList();
           _temples = [...templesList];
