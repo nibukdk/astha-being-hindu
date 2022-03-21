@@ -23,41 +23,47 @@ class AppPermissionProvider with ChangeNotifier {
 
   // Getter
   get locationStatus => _locationStatus;
-  get locationCenter => _locationCenter;
+  get locationCenter => _locationCenter as LatLng;
   get location => _location;
   get hasLocationChanged => _hasLocationChanged;
   get changedLocation => _changedLocation;
 
-  void getLocationStatus() async {
+  Future<PermissionStatus> getLocationStatus() async {
     final status = await Permission.location.request();
     _locationStatus = status;
-
     notifyListeners();
+    return status;
     // print(_locationStatus);
   }
 
-  void getLocation() async {
-    try {
-      HttpsCallable addUserLocation =
-          functions.httpsCallable('addUserLocation');
-      _locationData = await _location.getLocation();
-      _locationCenter = LatLng(_locationData!.latitude as double,
-          _locationData!.longitude as double);
+  Future<void> getLocation() async {
+    final status = await getLocationStatus();
+    if (status == PermissionStatus.granted ||
+        status == PermissionStatus.limited) {
+      try {
+        HttpsCallable addUserLocation =
+            functions.httpsCallable('addUserLocation');
+        _locationData = await _location.getLocation();
+        final lat = _locationData != null
+            ? _locationData!.latitude as double
+            : "Not available";
+        final lon = _locationData != null
+            ? _locationData!.longitude as double
+            : "Not available";
 
-      await addUserLocation.call(
-        <String, dynamic>{
-          'userLocation': {
-            'lat': _locationCenter != null
-                ? _locationCenter!.latitude
-                : "Not available",
-            'lon': _locationCenter != null
-                ? _locationCenter!.longitude
-                : "Not available",
-          }
-        },
-      );
-    } catch (e) {
-      print(e);
+        final response = await addUserLocation.call(
+          <String, dynamic>{
+            'userLocation': {
+              'lat': lat,
+              'lon': lon,
+            }
+          },
+        );
+        _locationCenter = LatLng(response.data['lat'], response.data['lon']);
+      } catch (e) {
+        _locationCenter = null;
+        rethrow;
+      }
     }
 
     notifyListeners();
