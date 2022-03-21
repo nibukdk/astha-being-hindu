@@ -22,7 +22,9 @@ Homepage of this app looks like this:
 Here the page starts with the daily quote from hindu holy books like gita. After that is grid view of Custom Card Buttons, whose purpose is to send user to relevant subpages on click.
 
 ## Temples List
-Usually you should create a marketing teams to promote assoiciations to add their temples in our app. BUt for the sake of app, I am using google Places API for find nearby temples upto 20 in numbers. Then storing those temples in firestore. Also, places API doesn't provide images, it is provided by places details api which I am not using. Hence, a random Image URL from the firebase storage is pulled to be saved as image for those temples. The subpage temple-list-screen looks as follows. 
+Usually you should create a marketing teams to promote assoiciations to add their temples in our app. BUt for the sake of app, I am using google Places API for find nearby temples upto 20 in numbers. Then storing those temples in firestore. Also, places API doesn't provide images, it is provided by places details api which I am not using. Hence, a random Image URL from the firebase storage is pulled to be saved as image for those temples. The templelist also has donate & favorite icons. Among them favorite icon functionality has been added.
+
+ The subpage temple-list-screen looks as follows. 
 
 ![Temple List Scren](assets/screenshots/temple_list_scrn_shot.png)
 
