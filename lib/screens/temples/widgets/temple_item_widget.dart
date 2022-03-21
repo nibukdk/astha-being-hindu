@@ -82,7 +82,7 @@ class _TempleItemWidgetState extends State<TempleItemWidget> {
                   bottom: 1,
                   child: Container(
                     color: Colors.black54,
-                    width: widget.width * .9,
+                    width: widget.width * 1,
                     height: 25,
                     child: Text(
                       widget.title,
