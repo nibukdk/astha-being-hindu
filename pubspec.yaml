@@ -102,6 +102,9 @@ flutter:
     - assets/AuthScreen/WelcomeScreenImage.png
     - assets/AuthScreen/WelcomeScreenImage_landscape.png
     - assets/AuthScreen/WelcomeScreenImage_landscape_2.png
+
+    # Shop section image
+    - assets/shop/img.png
     # Dot ENVA
     - .env
 
