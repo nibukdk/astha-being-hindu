@@ -7,7 +7,7 @@ import 'package:astha/screens/auth/screens/auth_screen.dart';
 import 'package:astha/screens/favorite/favorite.dart';
 import 'package:astha/screens/home/home_screen.dart';
 import 'package:astha/screens/onboard/onboard_screen.dart';
-import 'package:astha/screens/shop/shop_screen.dart';
+import 'package:astha/screens/shop/screens/shop_screen.dart';
 import 'package:go_router/go_router.dart';
 import 'utils/router_utils.dart';
 
