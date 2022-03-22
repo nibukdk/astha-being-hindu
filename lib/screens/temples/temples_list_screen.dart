@@ -18,17 +18,10 @@ class TempleListScreen extends StatefulWidget {
 }
 
 class _TempleListScreenState extends State<TempleListScreen> {
-  // late AppPermissionProvider appPermissionProvider;
   late TextEditingController _searchFormController;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
   late FocusNode _searchFormFocusNode;
   LatLng? _userLocation;
-  // Future? _temples;
-
-  // Future _nearbyTemples(location) {
-  //   return Provider.of<TempleProvider>(context, listen: false)
-  //       .getNearyByTemples(location);
-  // }
 
   @override
   void initState() {
@@ -52,11 +45,6 @@ class _TempleListScreenState extends State<TempleListScreen> {
     _searchFormController.dispose();
     _searchFormFocusNode.dispose();
   }
-
-  // bool isOnTheList(List itemList, String currentItemId) {
-  //   print("isOnTheList was called");
-  //   return itemList.contains(currentItemId);
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +71,7 @@ class _TempleListScreenState extends State<TempleListScreen> {
         isSubPage: true,
       ),
       primary: true,
-      bottomNavigationBar: BottomNavBar(navItemIndex: 0),
+      // bottomNavigationBar: BottomNavBar(navItemIndex: 0),
       body: SafeArea(
         child: FutureBuilder(
           future: Provider.of<TempleProvider>(context, listen: false)
