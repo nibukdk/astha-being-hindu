@@ -1,4 +1,5 @@
 import 'package:astha/provider/permissions/provider/permissions_provider.dart';
+import 'package:astha/screens/shop/provider/shop_provider.dart';
 import 'package:astha/screens/temples/provider/temple_provider.dart';
 import 'package:astha/settings/theme/theme.dart';
 import 'package:flutter/material.dart';
@@ -63,6 +64,8 @@ class _MyAppState extends State<MyApp> {
             prefs: widget.prefs,
           ),
         ),
+        ChangeNotifierProvider(create: (context) => ShopProvider()),
+
         // ChangeNotifierProvider(create: (context) => SearchPlacesProvider()),
       ],
       child: Builder(
